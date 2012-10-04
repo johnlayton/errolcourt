@@ -1,0 +1,46 @@
+<html>
+<head>
+    <script type="text/javascript" src="/browserify.js"></script>
+    <script type="text/javascript">
+        var Traverse = require('traverse');
+        
+        window.onload = function () {
+            var obj = { a : 1, b : [ 2, 3, 4 ], c : [ { d : 5, e : 6 } ] };
+            var leaves = Traverse(obj).reduce(function (acc, x) {
+                if (this.isLeaf) acc.push(x);
+                    return acc;
+                }, [])
+            ;
+            document.getElementById('result').innerHTML = leaves.join(', ');
+        };
+        
+        var Backbone = require('backbone');
+        
+        Person = Backbone.Model.extend({
+          initialize: function() {
+            this.bind("change:name", function() {
+              console.log(this.get('name') + " is now the value for name");
+            });
+            this.bind('error', function( model, error ) {
+              console.error(error);
+            });
+          },
+          defaults: {
+            name: "Bob Hope",
+            height: "unknown"
+          },
+          validate: function ( attributes ) {
+            if( attributes.name == 'Joe' ) {
+              return "Uh oh, you're name is Joe!";
+            }
+          }
+        });
+         
+        var person = new Person();
+        person.set({name: "Joe", height:"6 feet"});
+    </script>
+</head>
+<body>
+    <span id="result"></span>
+</body>
+</html>
